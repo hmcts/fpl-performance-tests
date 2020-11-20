@@ -26,7 +26,7 @@ object Feeders {
   var orgName = ""
   var appReferenceName = ""
   var sequence1=0
-  var seq = 50
+  var seq = 1
 
   def nextSeq() : Integer = {
 
@@ -44,12 +44,12 @@ object Feeders {
   }
 
   def generateOrganisationName() :String = {
-    orgName = ("ccdorg-" + randomAlphanumericString(5))
+    orgName = ("pforgdiv-" + randomAlphanumericString(5))
     orgName
   }
 
   def generateEmailAddress() :String = {
-    generatedEmail = (generateOrganisationName() + "_superuser@mailtest.gov.uk")
+    generatedEmail = (generateOrganisationName() + "_superuser@mailinator.com")
     //print("generated enail"+generatedEmail)
     generatedEmail
   }
@@ -90,7 +90,7 @@ object Feeders {
 
 
   val createDynamicDataFeeder = Iterator.continually(Map("generatedEmail" -> ({
-    generateOrganisationName()+"_superuser@mailinator.com"
+    generateOrganisationName()+"-su@mailtest.gov.uk"
   }),
     "orgName" -> ({
     orgName
@@ -106,18 +106,11 @@ object Feeders {
   })));
 
   val createDynamicUserDataFeeder = Iterator.continually(Map("generatedUserEmail" -> ({
-    "_pt.user"+nextSeq()+"@mailinator.com"
+    "-user"
   })));
 
 
-  val IACCreateDataFeeder = Iterator.continually(Map("service" -> ({
-    "IACC"
-  }),
-    "SignoutNumber" -> ({
-      "260"
-    })
 
-  ));
 
   val FPLCreateDataFeeder = Iterator.continually(Map("service" -> ({
     "FPLC"
@@ -127,13 +120,6 @@ object Feeders {
     })
   ));
 
-  val IACViewDataFeeder = Iterator.continually(Map("service" -> ({
-    "IACV"
-  }),
-    "SignoutNumber" -> ({
-      "070"
-    })
-  ));
 
   val FPLViewDataFeeder = Iterator.continually(Map("service" -> ({
     "FPLV"
@@ -155,14 +141,15 @@ object Feeders {
 
   ));
 
-  val ProDataFeeder = Iterator.continually(Map("service" -> ({
-    "PROB"
-  }),
+
+
+  val CwDataFeeder = Iterator.continually(Map("service" -> ({
+    "CW"
+}),
     "SignoutNumber" -> ({
-      "120"
+      "60"
     })
   ));
-
 
 
 
