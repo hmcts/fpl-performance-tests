@@ -44,7 +44,7 @@ object Feeders {
   }
 
   def generateOrganisationName() :String = {
-    orgName = ("pforgdiv-" + randomAlphanumericString(5))
+    orgName = ("fplaatorg-" + randomAlphanumericString(5))
     orgName
   }
 
