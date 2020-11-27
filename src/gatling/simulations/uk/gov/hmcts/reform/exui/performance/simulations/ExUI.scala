@@ -68,7 +68,7 @@ class ExUI extends Simulation {
 	  	.exec(EXUIMCLogin.manageCasesHomePage)
 		.exec(EXUIMCLogin.manageCaseslogin)
 			//.exec(EXUIMCLogin.termsnconditions)
-		  	.repeat(2) {
+		  	.repeat(1) {
 					exec(EXUIFPLAMC.fplacasecreation)
 				}
 		.exec(EXUIMCLogin.manageCase_Logout)
