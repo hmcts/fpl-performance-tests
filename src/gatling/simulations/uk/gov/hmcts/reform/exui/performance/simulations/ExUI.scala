@@ -43,20 +43,20 @@ class ExUI extends Simulation {
 	 {
 		exec(
 		//S2SHelper.S2SAuthToken,
-		ExUI.createSuperUser,
+		/*ExUI.createSuperUser,
 		ExUI.createOrg,
       ExUI.approveOrgHomePage,
 		ExUI.approveOrganisationlogin,
 			ExUI.approveOrganisationApprove,
-			ExUI.approveOrganisationLogout
-			/*ExUI.manageOrgHomePage,
+			ExUI.approveOrganisationLogout*/
+			ExUI.manageOrgHomePage,
 			ExUI.manageOrganisationLogin,
 			ExUI.usersPage,
 			ExUI.inviteUserPage
-			.repeat(4,"n") {
+			.repeat(5,"n") {
 				exec(ExUI.sendInvitation)
 				},
-			ExUI.manageOrganisationLogout*/
+			ExUI.manageOrganisationLogout
 			)
 	 }
 
@@ -68,13 +68,13 @@ class ExUI extends Simulation {
 	  	.exec(EXUIMCLogin.manageCasesHomePage)
 		.exec(EXUIMCLogin.manageCaseslogin)
 			//.exec(EXUIMCLogin.termsnconditions)
-		  	.repeat(1) {
+		  	.repeat(2) {
 					exec(EXUIFPLAMC.fplacasecreation)
 				}
 		.exec(EXUIMCLogin.manageCase_Logout)
 	}
 
-	val EXUIMCaseViewFPLAScn = scenario("***** FPLA View Case ***** ").repeat(1)
+	/*val EXUIMCaseViewFPLAScn = scenario("***** FPLA View Case ***** ").repeat(1)
 	{
 		feed(feedUserDataFPLView).feed(Feeders.FPLViewDataFeeder)
 			.exec(EXUIMCLogin.manageCasesHomePage)
@@ -106,7 +106,7 @@ class ExUI extends Simulation {
 		.exec(EXUIFPLASDO.fplasdogatekeeperactivities)
 		.exec(EXUIMCLogin.manageCase_LogoutGK)
 
-	}
+	}*/
 
 	val EXUIMCaseCaseworkerScn = scenario("***** Caseworker Journey ******").repeat(1)
   {
@@ -122,14 +122,14 @@ class ExUI extends Simulation {
 
 
 
-	/*setUp(
-
-		EXUIMCaseCaseworkerScn.inject(nothingFor(5),rampUsers(10) during (3)),
-		EXUIMCaseCreationFPLAScn.inject(nothingFor(35),rampUsers(10) during (2)),
-		EXUIMCaseViewFPLAScn.inject(nothingFor(15),rampUsers(10) during (3))
-	).protocols(IAChttpProtocol)*/
-
 	setUp(
+
+		//EXUIMCaseCaseworkerScn.inject(rampUsers(1) during (10)),
+		EXUIMCaseCreationFPLAScn.inject(rampUsers(1) during 10),
+		//EXUIMCaseViewFPLAScn.inject(rampUsers(1) during (10))
+	).protocols(IAChttpProtocol)
+
+	/*setUp(
 		EXUIScn.inject(rampUsers(1) during (10))
-	).protocols(XUIHttpProtocol)
+	).protocols(XUIHttpProtocol)*/
 }

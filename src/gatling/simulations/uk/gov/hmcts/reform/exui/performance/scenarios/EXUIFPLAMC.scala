@@ -38,7 +38,7 @@ object EXUIFPLAMC {
       .get("/data/internal/case-types/CARE_SUPERVISION_EPO/event-triggers/openCase?ignore-warning=false")
       .headers(FPLAHeader.headers_startcreatecase)
       .check(status.is(200))
-      .check(jsonPath("$.event_token").optional.saveAs("event_token")))
+      .check(jsonPath("$..event_token").optional.saveAs("event_token")))
       .exec(http("XUI${service}_050_010_CreateCaseProfile")
         .get("/data/internal/profile")
         .headers(FPLAHeader.headers_createprofile)
@@ -76,7 +76,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .body(StringBody("{\n  \"data\": {\n    \"caseName\": \"${firstName}\"\n  },\n  \"event\": {\n    \"id\": \"openCase\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"draft_id\": null\n}"))
         .check(status.in(200,304))
-        .check(jsonPath("$.id").optional.saveAs("caseId")))
+        .check(jsonPath("$..id").optional.saveAs("caseId")))
 
 
       .exec(http("XUI${service}_070_010_CaseNameViewCase")
