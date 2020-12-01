@@ -8,7 +8,7 @@ object EXUICaseWorker {
 
   val IdamUrl = Environment.idamURL
   val baseURL = Environment.baseURL
-  val caseFeeder = csv("CaseworkerSearches.csv").random
+  val caseFeeder = csv("CaseworkerSearches.csv").circular
 
   val MinThinkTime = Environment.minThinkTimeCW
   val MaxThinkTime = Environment.maxThinkTimeCW
@@ -21,6 +21,57 @@ object EXUICaseWorker {
         .body(StringBody("{\n  \"size\": 25\n}"))
         .check(jsonPath("$..case_id").find(0).optional.saveAs("caseNumber")))
       .pause(MinThinkTime, MaxThinkTime)
+  val ApplySort=
+    exec(http("XUI${service}_040_005_ApplySortCaseRef")
+         .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&page=1")
+         .headers(CaseworkerHeader.headers_sort)
+         .header("X-XSRF-TOKEN", "${xsrfToken}")
+         .body(StringBody("{\n  \"sort\": {\n    \"column\": \"caseName\",\n    \"order\": 1,\n    \"type\": \"Text\"\n  },\n  \"size\": 25\n}"))
+         .check(status.is(200)))
+    .pause(10)
+    .exec(http("XUI${service}_040_010_ApplySortFirstName")
+          .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&page=1")
+          .headers(CaseworkerHeader.headers_sort)
+          .header("X-XSRF-TOKEN", "${xsrfToken}")
+          .body(StringBody("{\n  \"sort\": {\n    \"column\": \"caseLocalAuthority\",\n    \"order\": 1,\n    \"type\": \"FixedList\"\n  },\n  \"size\": 25\n}"))
+          .check(status.is(200)))
+    .pause(10)
+
+  val ClickFindCase=
+    exec(http("XUI${service}_050_005_FindCase")
+         .get("/aggregated/caseworkers/:uid/jurisdictions?access=read")
+         .headers(CaseworkerHeader.headers_read)
+         .header("X-XSRF-TOKEN", "${xsrfToken}")
+    )
+
+    .exec(http("XUI${service}_050_010_FindCaseSearch")
+          .get("/data/internal/case-types/Asylum/search-inputs")
+          .headers(CaseworkerHeader.headers_read)
+          .header("X-XSRF-TOKEN", "${xsrfToken}")
+          .check(status.in(200,404))
+    )
+
+    .exec(http("XUI${service}_050_015_FindCaseSearchMeta")
+          .get("/aggregated/caseworkers/:uid/jurisdictions/IA/case-types/Asylum/cases?view=SEARCH&page=1")
+          .headers(CaseworkerHeader.headers_read)
+          .header("X-XSRF-TOKEN", "${xsrfToken}")
+          .check(status.in(200,404)))
+    .pause(10)
+    //submit find a case
+
+    .exec(http("XUI${service}_060_FindSearchResults")
+          .post("/data/internal/searchCases?ctid=${caseType}&use_case=WORKBASKET&view=WORKBASKET&page=1")
+          .headers(CaseworkerHeader.headers_2)
+          .header("X-XSRF-TOKEN", "${xsrfToken}")
+          .body(StringBody("{\n  \"size\": 25\n}"))
+          .check(jsonPath("$..case_id").find(0).optional.saveAs("caseNumber"))
+          .check(status.in(200,404)))
+    .pause(10)
+
+    .exec( session => {
+      println("the case number is  "+session("caseNumber").as[String])
+      session
+    })
 
   val ViewCase = doIf(session => session.contains("caseNumber")) {
       exec(http("XUI${service}_040_005_ViewCase")
@@ -38,6 +89,39 @@ object EXUICaseWorker {
           .get("/payments/cases/${caseNumber}/paymentgroups")
           .headers(CaseworkerHeader.headers_search).check(status.in(200,404,403)))
         .pause(MinThinkTime, MaxThinkTime)
+
+      //following is view tabs
+
+      .exec(http("XUI${service}_080_005_DetailsTabAppeal")
+            .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseNumber}%23CaseHistory")
+            .headers(CaseworkerHeader.headers_4)
+            .check(status.in(200,404)))
+
+      .exec(http("XUI${service}_080_010_aosDetails")
+            .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseNumber}%23HearingTab")
+            .headers(CaseworkerHeader.headers_4)
+            .check(status.in(200,404)))
+
+      .exec(http("XUI${service}_080_015_outcomeOfDnDetails")
+            .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseNumber}%23OrdersTab")
+            .headers(CaseworkerHeader.headers_4)
+            .check(status.in(200,404)))
+
+      .exec(http("XUI${service}_080_020_documents")
+            .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseNumber}%23CasePeopleTab")
+            .headers(CaseworkerHeader.headers_4)
+            .check(status.in(200,404)))
+
+      .exec(http("XUI${service}_080_025_marriageCertificate")
+            .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseNumber}%23LegalBasisTab")
+            .headers(CaseworkerHeader.headers_4)
+            .check(status.in(200,404)))
+
+      .exec(http("XUI${service}_080_030_Language")
+            .get("/api/healthCheck?path=%2Fcases%2Fcase-details%2F${caseNumber}%23DocumentsTab")
+            .headers(CaseworkerHeader.headers_4)
+            .check(status.in(200,404)))
+
 
       //TO DO - put this in a do-if statement, so only do these steps if document_ID is found
       .doIf(session => session.contains("Document_ID")) {

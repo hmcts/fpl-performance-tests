@@ -4,7 +4,25 @@ object CaseworkerHeader {
 
 val baseURL = Environment.baseURL
 
-val headers_0 = Map(
+    val headers_sort = Map(
+        "accept" -> "application/json",
+        "content-type" -> "application/json",
+        "origin" -> baseURL,
+        "sec-fetch-dest" -> "empty",
+        "sec-fetch-mode" -> "cors",
+        "sec-fetch-site" -> "same-origin",
+        "x-dtpc" -> "3$272180847_348h35vGVSERPHCKQWMJCRPGLHSAKFQMPLCLPHL-0e30")
+
+    val headers_read = Map(
+        "accept" -> "application/json, text/plain, */*",
+        "sec-fetch-dest" -> "empty",
+        "sec-fetch-mode" -> "cors",
+        "sec-fetch-site" -> "same-origin",
+        "x-dtpc" -> "2$595308963_803h13vGPUVHCQAOWPMASHWHNFGLKUMKEKFNFBO-0e7",
+        "x-dtreferer" -> ({baseURL+"/cases"}))
+
+
+    val headers_0 = Map(
     "Accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-workbasket-input-details.v2+json;charset=UTF-8",
     "Content-Type" -> "application/json",
     "Pragma" -> "no-cache",
