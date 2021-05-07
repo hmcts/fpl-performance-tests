@@ -51,11 +51,12 @@ object EXUICaseWorker {
           .check(status.in(200,404))
     )
 
-    .exec(http("XUI${service}_050_015_FindCaseSearchMeta")
-          .get("/aggregated/caseworkers/:uid/jurisdictions/IA/case-types/Asylum/cases?view=SEARCH&page=1")
-          .headers(CaseworkerHeader.headers_read)
-          .header("X-XSRF-TOKEN", "${xsrfToken}")
-          .check(status.in(200,404)))
+      .exec(http("XUI${service}_050_015_FindCaseSearchMeta")
+        .get("/data/internal/case-types/Asylum-XUI/search-inputs")
+        .headers(CaseworkerHeader.headers_read)
+        .header("X-XSRF-TOKEN", "${xsrfToken}")
+        .check(status.in(200,404))
+      )
     .pause(10)
     //submit find a case
 
