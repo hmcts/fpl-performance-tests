@@ -30,7 +30,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200, 304)))
     }.exitHereIfFailed
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
     .tryMax(2) {
 
@@ -45,7 +45,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200, 304))).exitHereIfFailed
   }
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       //set the random variables as usable parameters
       .exec(
@@ -61,30 +61,28 @@ object EXUIFPLAMC {
         .body(StringBody("{\n  \"data\": {\n    \"caseName\": \"${firstName}\"\n  },\n  \"event\": {\n    \"id\": \"openCase\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"caseName\": \"${firstName}\"\n  }\n}"))
         .check(status.is(200)))
 
-
       .exec(http("XUI${service}_060_010_CaseNameProfile")
       .get("/data/internal/profile")
       .headers(FPLAHeader.headers_opencaseprofile)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
       .check(status.in(200,304)))
 
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_070_005_CaseNameSaveContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/cases?ignore-warning=false")
         .headers(FPLAHeader.headers_72)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .body(StringBody("{\n  \"data\": {\n    \"caseName\": \"${firstName}\"\n  },\n  \"event\": {\n    \"id\": \"openCase\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"draft_id\": null\n}"))
-        .check(status.in(201,304))
+        .check(status.in(200,304))
         .check(jsonPath("$.id").optional.saveAs("caseId")))
-
 
       .exec(http("XUI${service}_070_010_CaseNameViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(FPLAHeader.headers_casesprofile)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .check(status.in(200,304)))
-      .pause(MinThinkTime , MaxThinkTime )
+        .check(status.in(201,304)))
+      .pause(MinThinkTime, MaxThinkTime)
 
       //Orders Needed
       .exec(http("XUI${service}_080_005_OrdersDirectionNeededGo")
@@ -100,7 +98,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_090_005_OrdersDirectionNeededContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=ordersNeeded1")
@@ -114,21 +112,21 @@ object EXUIFPLAMC {
         .headers(FPLAHeader.headers_ordersneed1profile)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_100_005_OrdersDirectionNeededSaveContinue")
         .post("/data/cases/${caseId}/events")
         .headers(FPLAHeader.headers_81)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .body(StringBody("{\n  \"data\": {\n    \"orders\": {\n      \"orderType\": [\n        \"CARE_ORDER\"\n      ],\n      \"directions\": null\n    }\n  },\n  \"event\": {\n    \"id\": \"ordersNeeded\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
-        .check(status.in(201,304)))
+        .check(status.in(200,304)))
 
       .exec(http("XUI${service}_100_010_OrdersDirectionViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(FPLAHeader.headers_casesprofile)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .check(status.in(200,304)))
-      .pause(MinThinkTime , MaxThinkTime )
+        .check(status.in(201,304)))
+      .pause(MinThinkTime, MaxThinkTime)
 
       //hearing needed
       .exec(http("XUI${service}_110_005_HearingNeededGo")
@@ -144,7 +142,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_120_005_HearingNeededContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=hearingNeeded1")
@@ -159,7 +157,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_130_005_HearingNeededSaveContinue")
         .post("/data/cases/${caseId}/events")
@@ -168,14 +166,13 @@ object EXUIFPLAMC {
         .body(StringBody("{\n  \"data\": {\n    \"hearing\": {\n      \"timeFrame\": \"Within 18 days\",\n      \"type\": null,\n      \"withoutNotice\": null,\n      \"reducedNotice\": null,\n      \"respondentsAware\": null\n    }\n  },\n  \"event\": {\n    \"id\": \"hearingNeeded\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
         .check(status.in(201,304)))
 
-
       .exec(http("XUI${service}_130_010_HearingNeededSaveViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(FPLAHeader.headers_casesprofile)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       //enter children
       .exec(http("XUI${service}_140_005_ChildrenGo")
@@ -191,7 +188,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_150_005_ChildrenContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterChildren1")
@@ -206,8 +203,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
-
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_160_005_ChildrenSaveContinue")
         .post("/data/cases/${caseId}/events")
@@ -222,7 +218,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       //enter respondants
       .exec(http("XUI${service}_170_005_RespondentsGo")
@@ -238,7 +234,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_180_005_RespondentsGetAddress")
         .get("/addresses?postcode=TW33SD")
@@ -246,7 +242,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_190_005_RespondentsContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterRespondents1")
@@ -261,7 +257,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_200_005_RespondentsSaveContinue")
         .post("/data/cases/${caseId}/events")
@@ -276,7 +272,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       // enter applicant
       .exec(http("XUI${service}_210_005_ApplicantGo")
@@ -292,8 +288,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
-
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_220_ApplicantGetAddress")
         .get("/addresses?postcode=TW33SD")
@@ -301,7 +296,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_230_005_ApplicantContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterApplicant1")
@@ -316,8 +311,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
-
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_240_005_ApplicantSaveContinue")
         .post("/data/cases/${caseId}/events")
@@ -331,7 +325,7 @@ object EXUIFPLAMC {
         .headers(FPLAHeader.headers_casesprofile)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       // enter grounds
       .exec(http("XUI${service}_250_005_GroundApplicationGo")
@@ -347,7 +341,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_260_005_GroundApplicationContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterGrounds1")
@@ -362,7 +356,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_270_005_GroundApplicationSaveContinue")
         .post("/data/cases/${caseId}/events")
@@ -377,7 +371,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       //other proposal
       .exec(http("XUI${service}_280_005_AllocationProposalGo")
@@ -393,7 +387,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_290_005_AllocationProposalContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=otherProposal1")
@@ -408,7 +402,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_300_005_AllocationProposalSaveContinue")
         .post("/data/cases/${caseId}/events")
@@ -423,7 +417,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       // upload documents
       .exec(http("XUI${service}_310_005_DocumentsGo")
@@ -438,7 +432,7 @@ object EXUIFPLAMC {
         .headers(FPLAHeader.headers_ordersneed1profile)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
       .exec(http("XUI${service}_320_UploadFile")
         .post("/documents")
         .headers(FPLAHeader.headers_uploadfile)
@@ -451,7 +445,7 @@ object EXUIFPLAMC {
         .check(status.is(200))
         .check(regex("""http://(.+)/""").saveAs("DMURL"))
         .check(regex("""internal/documents/(.+?)/binary""").saveAs("Document_ID")))
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_330_005_DocumentsContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=uploadDocuments1")
@@ -466,7 +460,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_340_005_DocumentsSaveContinue")
         .post("/data/cases/${caseId}/events")
@@ -481,7 +475,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       // submit application
       .exec(http("XUI${service}_350_005_SubmitApplicationGo")
@@ -497,7 +491,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_360_005_SubmitApplicationContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=submitApplication1")
@@ -512,7 +506,7 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
-      .pause(MinThinkTime , MaxThinkTime )
+      .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_370_005_ApplicationSubmitted")
         .post("/data/cases/${caseId}/events")
@@ -526,8 +520,8 @@ object EXUIFPLAMC {
         .headers(FPLAHeader.headers_casesprofile)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
-      .pause(MinThinkTime , MaxThinkTime )
 
+      .pause(MinThinkTime, MaxThinkTime)
 
 
   val findandviewcasefpl=
