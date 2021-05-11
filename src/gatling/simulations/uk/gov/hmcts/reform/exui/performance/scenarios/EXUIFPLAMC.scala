@@ -74,14 +74,14 @@ object EXUIFPLAMC {
         .headers(FPLAHeader.headers_72)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .body(StringBody("{\n  \"data\": {\n    \"caseName\": \"${firstName}\"\n  },\n  \"event\": {\n    \"id\": \"openCase\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${event_token}\",\n  \"ignore_warning\": false,\n  \"draft_id\": null\n}"))
-        .check(status.in(200,304))
+        .check(status.in(201,304))
         .check(jsonPath("$.id").optional.saveAs("caseId")))
 
       .exec(http("XUI${service}_070_010_CaseNameViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(FPLAHeader.headers_casesprofile)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .check(status.in(201,304)))
+        .check(status.in(200,304)))
       .pause(MinThinkTime, MaxThinkTime)
 
       //Orders Needed
@@ -119,13 +119,13 @@ object EXUIFPLAMC {
         .headers(FPLAHeader.headers_81)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .body(StringBody("{\n  \"data\": {\n    \"orders\": {\n      \"orderType\": [\n        \"CARE_ORDER\"\n      ],\n      \"directions\": null\n    }\n  },\n  \"event\": {\n    \"id\": \"ordersNeeded\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
-        .check(status.in(200,304)))
+        .check(status.in(201,304)))
 
       .exec(http("XUI${service}_100_010_OrdersDirectionViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(FPLAHeader.headers_casesprofile)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .check(status.in(201,304)))
+        .check(status.in(200,304)))
       .pause(MinThinkTime, MaxThinkTime)
 
       //hearing needed
