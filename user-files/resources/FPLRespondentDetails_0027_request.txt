@@ -1,0 +1,1 @@
+[{"kind":"identify","key":"2cfcf7b0-b8a6-11eb-8aad-4579fb6673b9","user":{"anonymous":true,"key":"2cfcf7b0-b8a6-11eb-8aad-4579fb6673b9"},"creationDate":1621500934246},{"startDate":1621500934563,"endDate":1621500934563,"features":{"MC_Work_Allocation":{"default":false,"counters":[{"value":true,"count":1,"variation":0,"version":29}]}},"kind":"summary"}]

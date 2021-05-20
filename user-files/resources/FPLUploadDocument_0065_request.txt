@@ -1,0 +1,10 @@
+------WebKitFormBoundarywZdDEqaxqGmVq2Qf
+Content-Disposition: form-data; name="files"; filename="3MB.pdf"
+Content-Type: application/pdf
+
+
+------WebKitFormBoundarywZdDEqaxqGmVq2Qf
+Content-Disposition: form-data; name="classification"
+
+PUBLIC
+------WebKitFormBoundarywZdDEqaxqGmVq2Qf--
