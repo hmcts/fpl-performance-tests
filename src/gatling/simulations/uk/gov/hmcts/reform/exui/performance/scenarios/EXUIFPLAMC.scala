@@ -628,7 +628,7 @@ object EXUIFPLAMC {
     "sec-fetch-dest" -> "empty",
     "sec-fetch-mode" -> "cors",
     "sec-fetch-site" -> "same-origin",
-    "x-xsrf-token" -> "M1Rquim4-d-IiawQF5DrngeOqsCL6aSY9xYw")
+    "x-xsrf-token" -> "${XSRFToken}")
 
   val respondent_headers_162 = Map(
     "accept" -> "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
