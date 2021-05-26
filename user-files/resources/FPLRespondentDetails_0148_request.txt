@@ -1,2 +1,0 @@
-en=page_view&_et=30211
-en=page_view&_et=988&dr=https%3A%2F%2Fmanage-case.aat.platform.hmcts.net%2Fcases%2Fcase-details%2F1621500656093644%2Ftrigger%2FenterRespondents%2FenterRespondents1
