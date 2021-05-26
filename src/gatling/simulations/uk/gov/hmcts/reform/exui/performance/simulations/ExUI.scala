@@ -69,7 +69,8 @@ class ExUI extends Simulation {
 		.exec(EXUIMCLogin.manageCaseslogin)
 			//.exec(EXUIMCLogin.termsnconditions)
 		  	.repeat(1) {
-					exec(EXUIFPLAMC.fplacasecreation)
+					 exec(EXUIFPLAMC.fplacasecreation1)
+					.exec(EXUIFPLAMC.fplacasecreation2)
 				}
 		.exec(EXUIMCLogin.manageCase_Logout)
 	}
@@ -127,12 +128,8 @@ class ExUI extends Simulation {
 	setUp(
 
 		EXUIMCaseCaseworkerScn.inject(rampUsers(1) during (10)),
-		//EXUIMCaseCreationFPLAScn.inject(rampUsers(1) during 10)
-		//EXUIMCaseViewFPLAScn.inject(rampUsers(1) during (10))
+		EXUIMCaseCreationFPLAScn.inject(rampUsers(1) during 10)
 	).protocols(IAChttpProtocol)
 	 .assertions(global.successfulRequests.percent.is(100))
 
-	/*setUp(
-		EXUIScn.inject(rampUsers(1) during (10))
-	).protocols(XUIHttpProtocol)*/
 }

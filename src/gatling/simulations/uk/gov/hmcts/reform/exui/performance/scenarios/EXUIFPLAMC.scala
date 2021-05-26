@@ -17,42 +17,46 @@ object EXUIFPLAMC {
   val MaxThinkTime = Environment.maxThinkTimeFPLC
   val MinThinkTimeFPLV = Environment.minThinkTimeFPLV
   val MaxThinkTimeFPLV = Environment.maxThinkTimeFPLV
-  
+
   private val rng: Random = new Random()
   private def firstName(): String = rng.alphanumeric.take(10).mkString
   private def lastName(): String = rng.alphanumeric.take(10).mkString
 
-  val fplacasecreation =
-    tryMax(2) {
-      exec(http("XUI${service}_040_CreateCase")
-        .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
-        .headers(FPLAHeader.headers_casecreation)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .check(status.in(200, 304)))
-    }.exitHereIfFailed
-      .pause(MinThinkTime, MaxThinkTime)
+  val fplacasecreation1 =
 
-    .tryMax(2) {
-
-    exec(http("XUI${service}_050_005_StartCreateCase")
-      .get("/data/internal/case-types/CARE_SUPERVISION_EPO/event-triggers/openCase?ignore-warning=false")
-      .headers(FPLAHeader.headers_startcreatecase)
-      .check(status.is(200))
-      .check(jsonPath("$.event_token").optional.saveAs("event_token")))
-      .exec(http("XUI${service}_050_010_CreateCaseProfile")
-        .get("/data/internal/profile")
-        .headers(FPLAHeader.headers_createprofile)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .check(status.in(200, 304))).exitHereIfFailed
-  }
-      .pause(MinThinkTime, MaxThinkTime)
-
-      //set the random variables as usable parameters
-      .exec(
+    //set the random variables as usable parameters
+    exec(
       _.setAll(
+        ("baseURL", baseURL),
         ("firstName", firstName()),
         ("lastName", lastName())
       ))
+
+      .tryMax(2) {
+        exec(http("XUI${service}_040_CreateCase")
+          .get("/aggregated/caseworkers/:uid/jurisdictions?access=create")
+          .headers(FPLAHeader.headers_casecreation)
+          .header("X-XSRF-TOKEN", "${XSRFToken}")
+          .check(status.in(200, 304)))
+      }.exitHereIfFailed
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .tryMax(2) {
+
+        exec(http("XUI${service}_050_005_StartCreateCase")
+          .get("/data/internal/case-types/CARE_SUPERVISION_EPO/event-triggers/openCase?ignore-warning=false")
+          .headers(FPLAHeader.headers_startcreatecase)
+          .check(status.is(200))
+          .check(jsonPath("$.event_token").optional.saveAs("event_token")))
+        .exec(http("XUI${service}_050_010_CreateCaseProfile")
+          .get("/data/internal/profile")
+          .headers(FPLAHeader.headers_createprofile)
+          .header("X-XSRF-TOKEN", "${XSRFToken}")
+          .check(status.in(200, 304))).exitHereIfFailed
+      }
+
+      .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_060_005_CaseNameContinue")
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=openCase1")
@@ -62,10 +66,10 @@ object EXUIFPLAMC {
         .check(status.is(200)))
 
       .exec(http("XUI${service}_060_010_CaseNameProfile")
-      .get("/data/internal/profile")
-      .headers(FPLAHeader.headers_opencaseprofile)
+        .get("/data/internal/profile")
+        .headers(FPLAHeader.headers_opencaseprofile)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(status.in(200,304)))
+        .check(status.in(200,304)))
 
       .pause(MinThinkTime, MaxThinkTime)
 
@@ -86,11 +90,11 @@ object EXUIFPLAMC {
 
       //Orders Needed
       .exec(http("XUI${service}_080_005_OrdersDirectionNeededGo")
-      .get("/data/internal/cases/${caseId}/event-triggers/ordersNeeded?ignore-warning=false")
-      .headers(FPLAHeader.headers_76)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
-      .check(status.in(200,304)))
+        .get("/data/internal/cases/${caseId}/event-triggers/ordersNeeded?ignore-warning=false")
+        .headers(FPLAHeader.headers_76)
+        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
+        .check(status.in(200,304)))
 
       .exec(http("XUI${service}_080_010_OrdersDirectionProfile")
         .get("/data/internal/profile")
@@ -130,11 +134,11 @@ object EXUIFPLAMC {
 
       //hearing needed
       .exec(http("XUI${service}_110_005_HearingNeededGo")
-      .get("/data/internal/cases/${caseId}/event-triggers/hearingNeeded?ignore-warning=false")
-      .headers(FPLAHeader.headers_76)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
-      .check(status.in(200,304)))
+        .get("/data/internal/cases/${caseId}/event-triggers/hearingNeeded?ignore-warning=false")
+        .headers(FPLAHeader.headers_76)
+        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
+        .check(status.in(200,304)))
 
       .exec(http("XUI${service}_110_010_HearingNeededGoProfile")
         .get("/data/internal/profile")
@@ -176,11 +180,11 @@ object EXUIFPLAMC {
 
       //enter children
       .exec(http("XUI${service}_140_005_ChildrenGo")
-      .get("/data/internal/cases/${caseId}/event-triggers/enterChildren?ignore-warning=false")
-      .headers(FPLAHeader.headers_76)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
-      .check(status.in(200,304)))
+        .get("/data/internal/cases/${caseId}/event-triggers/enterChildren?ignore-warning=false")
+        .headers(FPLAHeader.headers_76)
+        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
+        .check(status.in(200,304)))
 
       .exec(http("XUI${service}_140_010_ChildrenGoProfile")
         .get("/data/internal/profile")
@@ -220,24 +224,59 @@ object EXUIFPLAMC {
 
       .pause(MinThinkTime, MaxThinkTime)
 
-      //enter respondants
-      .exec(http("XUI${service}_170_005_RespondentsGo")
-      .get("/data/internal/cases/${caseId}/event-triggers/enterRespondents?ignore-warning=false")
-      .headers(FPLAHeader.headers_76)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
-      .check(status.in(200,304)))
+      //enter respondents
+      .exec(http("XUI${service}_170_005_EnterRespondents1")
+        .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/${caseId}/trigger/enterRespondents")
+        .headers(FPLAHeader.respondent_headers_3)
+        .check(status.in(200,304)))
 
-      .exec(http("XUI${service}_170_010_RespondentsGoProfile")
+      .exec(http("XUI${service}_170_010_EnterRespondents2")
+        .get("/api/user/details")
+        .headers(FPLAHeader.respondent_headers_22)
+        .check(status.in(200,304)))
+
+      .exec(http("XUI${service}_170_015_EnterRespondents3")
+        .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
+        .headers(FPLAHeader.respondent_headers_22)
+        .check(status.in(200,304)))
+
+      .exec(http("XUI${service}_170_020_EnterRespondents4")
+        .get("/data/internal/cases/${caseId}")
+        .headers(FPLAHeader.respondent_headers_30)
+        .check(status.in(200,304)))
+
+      .exec(http("XUI${service}_170_025_RespondentsGo")
+        .get("/data/internal/cases/${caseId}/event-triggers/enterRespondents?ignore-warning=false")
+        .headers(FPLAHeader.headers_76)
+        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .check(jsonPath("$..id").find(2).saveAs("respondentId"))
+        .check(jsonPath("$..partyId").saveAs("partyId"))
+        .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
+        .check(status.in(200,304)))
+
+      .exec(http("XUI${service}_170_030_RespondentsGoProfile")
         .get("/data/internal/profile")
         .headers(FPLAHeader.headers_ordersneed1profile)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
+      .exec(http("XUI${service}_170_035_RespondentOrgs1")
+        .get("/api/caseshare/orgs")
+        .headers(FPLAHeader.respondent_headers_63)
+        .check(status.in(200,304)))
+
       .pause(MinThinkTime, MaxThinkTime)
 
-      .exec(http("XUI${service}_180_005_RespondentsGetAddress")
-        .get("/addresses?postcode=TW33SD")
+      .exec(http("XUI${service}_180_005_RespondentsGetAddress1")
+        .get("/addresses?postcode=SW1H9AJ")
+        .headers(FPLAHeader.headers_16)
+        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .check(status.in(200,304)))
+
+      .pause(MinThinkTime, MaxThinkTime)
+
+      .exec(http("XUI${service}_180_010_RespondentsGetAddress2")
+        .get("/addresses?postcode=SW1H9AJ")
         .headers(FPLAHeader.headers_16)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
@@ -248,7 +287,7 @@ object EXUIFPLAMC {
         .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=enterRespondents1")
         .headers(FPLAHeader.headers_71)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(StringBody("{\n  \"data\": {\n    \"respondents1\": [\n      {\n        \"id\": \"416c4c9c-fdae-4259-8e32-fc7877dc1abf\",\n        \"value\": {\n          \"party\": {\n            \"firstName\": \"tess\",\n            \"lastName\": \"tickles\",\n            \"dateOfBirth\": \"1981-02-22\",\n            \"gender\": \"Female\",\n            \"placeOfBirth\": \"london\",\n            \"address\": {\n              \"AddressLine1\": \"Flat 12\",\n              \"AddressLine2\": \"Bramber House\",\n              \"AddressLine3\": \"Seven Kings Way\",\n              \"PostTown\": \"Kingston Upon Thames\",\n              \"County\": \"\",\n              \"PostCode\": \"KT2 5BU\",\n              \"Country\": \"United Kingdom\"\n            },\n            \"telephoneNumber\": {\n              \"telephoneNumber\": \"02088889966\",\n              \"contactDirection\": \"tess\"\n            },\n            \"relationshipToChild\": \"test\",\n            \"contactDetailsHidden\": \"No\",\n            \"litigationIssues\": \"NO\"\n          }\n        }\n      }\n    ]\n  },\n  \"event\": {\n    \"id\": \"enterRespondents\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"respondents1\": [\n      {\n        \"id\": \"416c4c9c-fdae-4259-8e32-fc7877dc1abf\",\n        \"value\": {\n          \"party\": {\n            \"firstName\": \"tess\",\n            \"lastName\": \"tickles\",\n            \"dateOfBirth\": \"1981-02-22\",\n            \"gender\": \"Female\",\n            \"placeOfBirth\": \"london\",\n            \"address\": {\n              \"AddressLine1\": \"Flat 12\",\n              \"AddressLine2\": \"Bramber House\",\n              \"AddressLine3\": \"Seven Kings Way\",\n              \"PostTown\": \"Kingston Upon Thames\",\n              \"County\": \"\",\n              \"PostCode\": \"KT2 5BU\",\n              \"Country\": \"United Kingdom\"\n            },\n            \"telephoneNumber\": {\n              \"telephoneNumber\": \"02088889999\",\n              \"contactDirection\": \"tess\"\n            },\n            \"relationshipToChild\": \"test\",\n            \"contactDetailsHidden\": \"No\",\n            \"litigationIssues\": \"NO\"\n          }\n        }\n      }\n    ]\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
+        .body(StringBody("""{"data":{"respondents1":[{"value":{"persistRepresentedBy":null,"leadRespondentIndicator":null,"legalRepresentation":"Yes","party":{"firstName":"John","lastName":"Smith","dateOfBirth":"1980-02-21","gender":"Male","genderIdentification":null,"relationshipToChild":"Father","contactDetailsHidden":"No","contactDetailsHiddenReason":null,"litigationIssues":"NO","litigationIssuesDetails":null,"partyId":"${partyId}","partyType":null,"placeOfBirth":null,"address":{"AddressLine1":"Ministry Of Justice","AddressLine2":"Seventh Floor 102 Petty France","AddressLine3":"","PostTown":"London","County":"","PostCode":"TS1 1ST","Country":"United Kingdom"},"telephoneNumber":{"telephoneNumber":"020 2772 5772","contactDirection":null}},"representedBy":[],"solicitor":{"firstName":"James","lastName":"Brown","email":"sscs.ptest.4@mailinator.com","organisation":{"OrganisationID":"G7AXGLA","OrganisationName":"Onofpub"},"unregisteredOrganisation":{"name":null,"address":{"AddressLine1":null,"AddressLine2":null,"AddressLine3":null,"PostTown":null,"County":null,"PostCode":null,"Country":null}},"regionalOfficeAddress":{"AddressLine1":"Ministry Of Justice","AddressLine2":"Seventh Floor 102 Petty France","AddressLine3":"","PostTown":"London","County":"","PostCode":"SW1H 9AJ","Country":"United Kingdom"}}},"id":"${respondentId}"}]},"event":{"id":"enterRespondents","summary":"","description":""},"event_data":{"respondents1":[{"value":{"persistRepresentedBy":null,"leadRespondentIndicator":null,"legalRepresentation":"Yes","party":{"firstName":"John","lastName":"Smith","dateOfBirth":"1980-02-21","gender":"Male","genderIdentification":null,"relationshipToChild":"Father","contactDetailsHidden":"No","contactDetailsHiddenReason":null,"litigationIssues":"NO","litigationIssuesDetails":null,"partyId":"${partyId}","partyType":null,"placeOfBirth":null,"address":{"AddressLine1":"Ministry Of Justice","AddressLine2":"Seventh Floor 102 Petty France","AddressLine3":"","PostTown":"London","County":"","PostCode":"TS1 1ST","Country":"United Kingdom"},"telephoneNumber":{"telephoneNumber":"020 2772 5772","contactDirection":null}},"representedBy":[],"solicitor":{"firstName":"James","lastName":"Brown","email":"sscs.ptest.4@mailinator.com","organisation":{"OrganisationID":"G7AXGLA","OrganisationName":"Onofpub"},"unregisteredOrganisation":{"name":null,"address":{"AddressLine1":null,"AddressLine2":null,"AddressLine3":null,"PostTown":null,"County":null,"PostCode":null,"Country":null}},"regionalOfficeAddress":{"AddressLine1":"Ministry Of Justice","AddressLine2":"Seventh Floor 102 Petty France","AddressLine3":"","PostTown":"London","County":"","PostCode":"SW1H 9AJ","Country":"United Kingdom"}}},"id":"${respondentId}"}]},"event_token":"${existing_case_event_token}","ignore_warning":false,"case_reference":"${caseId}"}"""))
         .check(status.in(200,304)))
 
       .exec(http("XUI${service}_190_010_RespondentsContinueProfile")
@@ -257,16 +296,27 @@ object EXUIFPLAMC {
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
 
+      .exec(http("XUI${service}_190_015_RespondentOrgs2")
+        .get("/api/caseshare/orgs")
+        .headers(FPLAHeader.respondent_headers_63)
+        .check(status.in(200,304)))
+
       .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_200_005_RespondentsSaveContinue")
         .post("/data/cases/${caseId}/events")
         .headers(FPLAHeader.headers_80)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(StringBody("{\n  \"data\": {\n    \"respondents1\": [\n      {\n        \"id\": \"416c4c9c-fdae-4259-8e32-fc7877dc1abf\",\n        \"value\": {\n          \"party\": {\n            \"firstName\": \"tess\",\n            \"lastName\": \"tickles\",\n            \"dateOfBirth\": \"1981-02-22\",\n            \"gender\": \"Female\",\n            \"placeOfBirth\": \"london\",\n            \"address\": {\n              \"AddressLine1\": \"Flat 12\",\n              \"AddressLine2\": \"Bramber House\",\n              \"AddressLine3\": \"Seven Kings Way\",\n              \"PostTown\": \"Kingston Upon Thames\",\n              \"County\": \"\",\n              \"PostCode\": \"KT2 5BU\",\n              \"Country\": \"United Kingdom\"\n            },\n            \"telephoneNumber\": {\n              \"telephoneNumber\": \"02088889966\",\n              \"contactDirection\": \"tess\"\n            },\n            \"relationshipToChild\": \"test\",\n            \"contactDetailsHidden\": \"No\",\n            \"litigationIssues\": \"NO\"\n          }\n        }\n      }\n    ]\n  },\n  \"event\": {\n    \"id\": \"enterRespondents\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
+        .body(StringBody("""{"data":{"respondents1":[{"value":{"persistRepresentedBy":null,"leadRespondentIndicator":null,"legalRepresentation":"Yes","party":{"firstName":"John","lastName":"Smith","dateOfBirth":"1980-02-21","gender":"Male","genderIdentification":null,"relationshipToChild":"Father","contactDetailsHidden":"No","contactDetailsHiddenReason":null,"litigationIssues":"NO","litigationIssuesDetails":null,"partyId":"${partyId}","partyType":null,"placeOfBirth":null,"address":{"AddressLine1":"Ministry Of Justice","AddressLine2":"Seventh Floor 102 Petty France","AddressLine3":"","PostTown":"London","County":"","PostCode":"TS1 1ST","Country":"United Kingdom"},"telephoneNumber":{"telephoneNumber":"020 2772 5772","contactDirection":null}},"representedBy":[],"solicitor":{"firstName":"James","lastName":"Brown","email":"sscs.ptest.4@mailinator.com","organisation":{"OrganisationID":"G7AXGLA","OrganisationName":"Onofpub"},"unregisteredOrganisation":{"name":null,"address":{"AddressLine1":null,"AddressLine2":null,"AddressLine3":null,"PostTown":null,"County":null,"PostCode":null,"Country":null}},"regionalOfficeAddress":{"AddressLine1":"Ministry Of Justice","AddressLine2":"Seventh Floor 102 Petty France","AddressLine3":"","PostTown":"London","County":"","PostCode":"SW1H 9AJ","Country":"United Kingdom"}}},"id":"${respondentId}"}]},"event":{"id":"enterRespondents","summary":"","description":""},"event_token":"${existing_case_event_token}","ignore_warning":false}"""))
         .check(status.in(201,304)))
 
-      .exec(http("XUI${service}_200_010_RespondentsSaveViewCase")
+      .exec(http("XUI${service}_200_010_SearchForCompletable")
+        .post("/workallocation/searchForCompletable")
+        .headers(FPLAHeader.respondent_headers_159)
+        .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"enterRespondents","jurisdiction":"PUBLICLAW","caseTypeId":"CARE_SUPERVISION_EPO"}}"""))
+        .check(status.is(401)))
+
+      .exec(http("XUI${service}_200_015_RespondentsSaveViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(FPLAHeader.headers_casesprofile)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
@@ -274,13 +324,14 @@ object EXUIFPLAMC {
 
       .pause(MinThinkTime, MaxThinkTime)
 
-      // enter applicant
-      .exec(http("XUI${service}_210_005_ApplicantGo")
-      .get("/data/internal/cases/${caseId}/event-triggers/enterApplicant?ignore-warning=false")
-      .headers(FPLAHeader.headers_76)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
-      .check(status.in(200,304)))
+  val fplacasecreation2 =
+  // enter applicant
+      exec(http("XUI${service}_210_005_ApplicantGo")
+        .get("/data/internal/cases/${caseId}/event-triggers/enterApplicant?ignore-warning=false")
+        .headers(FPLAHeader.headers_76)
+        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
+        .check(status.in(200,304)))
 
       .exec(http("XUI${service}_210_010_ApplicantGoProfile")
         .get("/data/internal/profile")
@@ -329,11 +380,11 @@ object EXUIFPLAMC {
 
       // enter grounds
       .exec(http("XUI${service}_250_005_GroundApplicationGo")
-      .get("/data/internal/cases/${caseId}/event-triggers/enterGrounds?ignore-warning=false")
-      .headers(FPLAHeader.headers_76)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
-      .check(status.in(200,304)))
+        .get("/data/internal/cases/${caseId}/event-triggers/enterGrounds?ignore-warning=false")
+        .headers(FPLAHeader.headers_76)
+        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
+        .check(status.in(200,304)))
 
       .exec(http("XUI${service}_250_010__GroundApplicationGoProfile")
         .get("/data/internal/profile")
@@ -375,11 +426,11 @@ object EXUIFPLAMC {
 
       //other proposal
       .exec(http("XUI${service}_280_005_AllocationProposalGo")
-      .get("/data/internal/cases/${caseId}/event-triggers/otherProposal?ignore-warning=false")
-      .headers(FPLAHeader.headers_76)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
-      .check(status.in(200,304)))
+        .get("/data/internal/cases/${caseId}/event-triggers/otherProposal?ignore-warning=false")
+        .headers(FPLAHeader.headers_76)
+        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
+        .check(status.in(200,304)))
 
       .exec(http("XUI${service}_280_010_AllocationProposalGoProfile")
         .get("/data/internal/profile")
@@ -420,19 +471,41 @@ object EXUIFPLAMC {
       .pause(MinThinkTime, MaxThinkTime)
 
       // upload documents
-      .exec(http("XUI${service}_310_005_DocumentsGo")
-      .get("/data/internal/cases/${caseId}/event-triggers/uploadDocuments?ignore-warning=false")
-      .headers(FPLAHeader.headers_76)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
-      .check(status.in(200,304)))
+      .exec(http("XUI${service}_310_005_UploadDocuments1")
+        .get("/case/PUBLICLAW/CARE_SUPERVISION_EPO/${caseId}/trigger/uploadDocuments")
+        .headers(FPLAHeader.document_headers_3)
+        .check(status.in(200,304)))
 
-      .exec(http("XUI${service}_310_010_DocumentsGoProfile")
+      .exec(http("XUI${service}_310_010_UploadDocuments2")
+        .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
+        .headers(FPLAHeader.document_headers_22)
+        .check(status.in(200,304)))
+
+      .exec(http("XUI${service}_310_015_UploadDocuments3")
+        .get("/api/user/details")
+        .headers(FPLAHeader.document_headers_22)
+        .check(status.in(200,304)))
+
+      .exec(http("XUI${service}_310_020_UploadDocuments4")
+        .get("/data/internal/cases/${caseId}")
+        .headers(FPLAHeader.document_headers_31)
+        .check(status.in(200,304)))
+
+      .exec(http("XUI${service}_310_025_DocumentsGo")
+        .get("/data/internal/cases/${caseId}/event-triggers/uploadDocuments?ignore-warning=false")
+        .headers(FPLAHeader.headers_76)
+        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
+        .check(status.in(200,304)))
+
+      .exec(http("XUI${service}_310_030_DocumentsGoProfile")
         .get("/data/internal/profile")
         .headers(FPLAHeader.headers_ordersneed1profile)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
         .check(status.in(200,304)))
+
       .pause(MinThinkTime, MaxThinkTime)
+
       .exec(http("XUI${service}_320_UploadFile")
         .post("/documents")
         .headers(FPLAHeader.headers_uploadfile)
@@ -445,13 +518,13 @@ object EXUIFPLAMC {
         .check(status.is(200))
         .check(regex("""http://(.+)/""").saveAs("DMURL"))
         .check(regex("""internal/documents/(.+?)/binary""").saveAs("Document_ID")))
+
       .pause(MinThinkTime, MaxThinkTime)
 
       .exec(http("XUI${service}_330_005_DocumentsContinue")
-        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=uploadDocuments1")
-        .headers(FPLAHeader.headers_71)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(StringBody("{\n  \"data\": {\n    \"documents_socialWorkChronology_document\": {\n      \"documentStatus\": \"Attached\",\n      \"typeOfDocument\": {\n        \"document_url\": \"http://dm-store-aat.service.core-compute-aat.internal/documents/${Document_ID}\",\n        \"document_binary_url\": \"http://dm-store-aat.service.core-compute-aat.internal/documents/${Document_ID}/binary\",\n        \"document_filename\": \"3MB.pdf\"\n      }\n    },\n    \"documents_socialWorkStatement_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkAssessment_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkCarePlan_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkEvidenceTemplate_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_threshold_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_checklist_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkOther\": []\n  },\n  \"event\": {\n    \"id\": \"uploadDocuments\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false,\n  \"event_data\": {\n    \"documents_socialWorkChronology_document\": {\n      \"documentStatus\": \"Attached\",\n      \"typeOfDocument\": {\n        \"document_url\": \"http://dm-store-aat.service.core-compute-aat.internal/documents/${Document_ID}\",\n        \"document_binary_url\": \"http://dm-store-aat.service.core-compute-aat.internal/documents/${Document_ID}/binary\",\n        \"document_filename\": \"3MB.pdf\"\n      }\n    },\n    \"documents_socialWorkStatement_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkAssessment_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkCarePlan_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkEvidenceTemplate_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_threshold_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_checklist_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkOther\": []\n  },\n  \"case_reference\": \"${caseId}\"\n}"))
+        .post("/data/case-types/CARE_SUPERVISION_EPO/validate?pageId=uploadDocumentsaddApplicationDocuments")
+        .headers(FPLAHeader.document_headers_75)
+        .body(StringBody("""{"data":{"applicationDocuments":[{"value":{"documentType":"THRESHOLD","includedInSWET":null,"uploadedBy":null,"document":{"document_url":"http://${DMURL}/${Document_ID}","document_binary_url":"http://${DMURL}/${Document_ID}/binary","document_filename":"3MB.pdf"}},"id":null}],"applicationDocumentsToFollowReason":"This is the necessary document"},"event":{"id":"uploadDocuments","summary":"","description":""},"event_data":{"applicationDocuments":[{"value":{"documentType":"THRESHOLD","includedInSWET":null,"uploadedBy":null,"document":{"document_url":"http://${DMURL}/${Document_ID}","document_binary_url":"http://${DMURL}/${Document_ID}/binary","document_filename":"3MB.pdf"}},"id":null}],"applicationDocumentsToFollowReason":"This is the necessary document"},"event_token":"${existing_case_event_token}","ignore_warning":false,"case_reference":"${caseId}"}"""))
         .check(status.in(200,304)))
 
       .exec(http("XUI${service}_330_010_DocumentsContinueProfile")
@@ -466,10 +539,16 @@ object EXUIFPLAMC {
         .post("/data/cases/${caseId}/events")
         .headers(FPLAHeader.headers_80)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .body(StringBody("{\n  \"data\": {\n    \"documents_socialWorkChronology_document\": {\n      \"documentStatus\": \"Attached\",\n      \"typeOfDocument\": {\n        \"document_url\": \"http://dm-store-aat.service.core-compute-aat.internal/documents/${Document_ID}\",\n        \"document_binary_url\": \"http://dm-store-aat.service.core-compute-aat.internal/documents/${Document_ID}/binary\",\n        \"document_filename\": \"3MB.pdf\"\n      }\n    },\n    \"documents_socialWorkStatement_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkAssessment_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkCarePlan_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkEvidenceTemplate_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_threshold_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_checklist_document\": {\n      \"documentStatus\": \"To follow\",\n      \"statusReason\": \"test\"\n    },\n    \"documents_socialWorkOther\": []\n  },\n  \"event\": {\n    \"id\": \"uploadDocuments\",\n    \"summary\": \"\",\n    \"description\": \"\"\n  },\n  \"event_token\": \"${existing_case_event_token}\",\n  \"ignore_warning\": false\n}"))
-        .check(status.in(200,304)))
+        .body(StringBody("""{"data":{"applicationDocuments":[{"value":{"documentType":"THRESHOLD","includedInSWET":null,"uploadedBy":null,"document":{"document_url":"http://${DMURL}/${Document_ID}","document_binary_url":"http://${DMURL}/${Document_ID}/binary","document_filename":"3MB.pdf"}},"id":null}],"applicationDocumentsToFollowReason":"This is the necessary document"},"event":{"id":"uploadDocuments","summary":"","description":""},"event_token":"${existing_case_event_token}","ignore_warning":false}"""))
+        .check(status.in(201,304)))
 
-      .exec(http("XUI${service}_340_010_DocumentsSaveViewCase")
+      .exec(http("XUI${service}_340_010_SearchForCompletable")
+        .post("/workallocation/searchForCompletable")
+        .headers(FPLAHeader.document_headers_98)
+        .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"uploadDocuments","jurisdiction":"PUBLICLAW","caseTypeId":"CARE_SUPERVISION_EPO"}}"""))
+        .check(status.is(401)))
+
+      .exec(http("XUI${service}_340_015_DocumentsSaveViewCase")
         .get("/data/internal/cases/${caseId}")
         .headers(FPLAHeader.headers_casesprofile)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
@@ -479,11 +558,11 @@ object EXUIFPLAMC {
 
       // submit application
       .exec(http("XUI${service}_350_005_SubmitApplicationGo")
-      .get("/data/internal/cases/${caseId}/event-triggers/submitApplication?ignore-warning=false")
-      .headers(FPLAHeader.headers_76)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
-      .check(status.in(200,304)))
+        .get("/data/internal/cases/${caseId}/event-triggers/submitApplication?ignore-warning=false")
+        .headers(FPLAHeader.headers_76)
+        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .check(jsonPath("$.event_token").saveAs("existing_case_event_token"))
+        .check(status.in(200,304)))
 
       .exec(http("XUI${service}_350_010_SubmitApplicationGoProfile")
         .get("/data/internal/profile")
@@ -536,30 +615,30 @@ object EXUIFPLAMC {
         .exec(http("XUI${service}_040_010_SearchPaginationMetaData")
           .get("/aggregated/caseworkers/:uid/jurisdictions/PUBLICLAW/case-types/CARE_SUPERVISION_EPO/cases?view=SEARCH&page=1&state=Submitted")
           .headers(FPLAHeader.headers_search)
-        .header("X-XSRF-TOKEN", "${XSRFToken}")
-        .check(status.in(200,304)))
+          .header("X-XSRF-TOKEN", "${XSRFToken}")
+          .check(status.in(200,304)))
 
     }
 
-    .exec(http("XUI${service}_040_015_SearchPaginationMetaData")
-  .get("/data/internal/case-types/CARE_SUPERVISION_EPO/search-inputs")
-    .headers(FPLAHeader.headers_searchpaginationmetadata)
-    .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(status.in(200,304))
-    )
+      .exec(http("XUI${service}_040_015_SearchPaginationMetaData")
+        .get("/data/internal/case-types/CARE_SUPERVISION_EPO/search-inputs")
+        .headers(FPLAHeader.headers_searchpaginationmetadata)
+        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .check(status.in(200,304))
+      )
 
-        .exec(http("XUI${service}_040_020_SearchResults")
-          .post("/data/internal/searchCases?ctid=CARE_SUPERVISION_EPO&use_case=SEARCH&view=SEARCH&page=1&state=Submitted")
-          .headers(FPLAHeader.headers_results)
-          .header("X-XSRF-TOKEN", "${XSRFToken}")
-                .body(StringBody("{\n  \"size\": 25\n}"))
-          .check(status.in(200,304))
-         // .check(jsonPath("$..case_id").findAll.optional.saveAs("caseNumbersFPL")))
-              .check(jsonPath("$..case_id").find(0).optional.saveAs("caseNumberFPL")))
+      .exec(http("XUI${service}_040_020_SearchResults")
+        .post("/data/internal/searchCases?ctid=CARE_SUPERVISION_EPO&use_case=SEARCH&view=SEARCH&page=1&state=Submitted")
+        .headers(FPLAHeader.headers_results)
+        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .body(StringBody("{\n  \"size\": 25\n}"))
+        .check(status.in(200,304))
+        // .check(jsonPath("$..case_id").findAll.optional.saveAs("caseNumbersFPL")))
+        .check(jsonPath("$..case_id").find(0).optional.saveAs("caseNumberFPL")))
       .pause(MinThinkTimeFPLV , MaxThinkTimeFPLV )
 
-   // .foreach("${caseNumbersFPL}","caseNumberFPL") {
-        .exec(http("XUI${service}_050_ViewCase")
+      // .foreach("${caseNumbersFPL}","caseNumberFPL") {
+      .exec(http("XUI${service}_050_ViewCase")
         .get("/data/internal/cases/${caseNumberFPL}")
         .headers(FPLAHeader.headers_searchinputs)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
@@ -567,36 +646,36 @@ object EXUIFPLAMC {
         .check(regex("""internal/documents/(.+?)","document_filename""").find(0).saveAs("Document_ID"))
         .check(status.is(200)))
 
-        .pause(MinThinkTimeFPLV , MaxThinkTimeFPLV )
+      .pause(MinThinkTimeFPLV , MaxThinkTimeFPLV )
 
-    .exec(http("XUI${service}_060_005_ViewCaseDocumentUI")
-      .get("/external/config/ui")
-      .headers(FPLAHeader.headers_documents)
+      .exec(http("XUI${service}_060_005_ViewCaseDocumentUI")
+        .get("/external/config/ui")
+        .headers(FPLAHeader.headers_documents)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(status.in(200,304))
+        .check(status.in(200,304))
         .check(status.in(200,304)))
 
-    .exec(http("XUI${service}_060_010_ViewCaseDocumentT&C")
-      .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
-      .headers(FPLAHeader.headers_documents)
+      .exec(http("XUI${service}_060_010_ViewCaseDocumentT&C")
+        .get("/api/configuration?configurationKey=termsAndConditionsEnabled")
+        .headers(FPLAHeader.headers_documents)
         .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(status.in(200,304))
+        .check(status.in(200,304))
         .check(status.in(200,304)))
 
-   /* .exec(http("XUI${service}_060_015_ViewCaseDocumentAnnotations")
-      .get("/em-anno/annotation-sets/filter?documentId=${Document_ID}")
-      .headers(FPLAHeader.headers_documents)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(status.in(200,304))
-      .check(status.in(200, 404,304)))*/
+      /* .exec(http("XUI${service}_060_015_ViewCaseDocumentAnnotations")
+         .get("/em-anno/annotation-sets/filter?documentId=${Document_ID}")
+         .headers(FPLAHeader.headers_documents)
+         .header("X-XSRF-TOKEN", "${XSRFToken}")
+         .check(status.in(200,304))
+         .check(status.in(200, 404,304)))*/
 
-    .exec(http("XUI${service}_060_015_ViewCaseDocumentBinary")
-      .get("/documents/${Document_ID}/binary")
-      .headers(FPLAHeader.headers_documents)
-      .header("X-XSRF-TOKEN", "${XSRFToken}")
-      .check(status.in(200,304))
+      .exec(http("XUI${service}_060_015_ViewCaseDocumentBinary")
+        .get("/documents/${Document_ID}/binary")
+        .headers(FPLAHeader.headers_documents)
+        .header("X-XSRF-TOKEN", "${XSRFToken}")
+        .check(status.in(200,304))
         .check(status.in(200, 404,304)))
-        .pause(MinThinkTimeFPLV , MaxThinkTimeFPLV )
+      .pause(MinThinkTimeFPLV , MaxThinkTimeFPLV )
   //  }
 
 

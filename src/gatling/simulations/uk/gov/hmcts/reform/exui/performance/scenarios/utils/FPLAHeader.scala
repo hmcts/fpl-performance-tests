@@ -1834,4 +1834,124 @@ object FPLAHeader {
   "sec-fetch-site" -> "same-origin",
   "x-dtpc" -> "3$151995464_260h2vLUKIPDRTGHKMLPHEPIVUENOBLKPRFDMA-0")
 
+ val document_headers_3 = Map(
+  "accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+  "accept-encoding" -> "gzip, deflate, br",
+  "accept-language" -> "en-GB,en-US;q=0.9,en;q=0.8",
+  "sec-ch-ua" -> """Chromium";v="88", "Google Chrome";v="88", ";Not A Brand";v="99""",
+  "sec-ch-ua-mobile" -> "?0",
+  "sec-fetch-dest" -> "document",
+  "sec-fetch-mode" -> "navigate",
+  "sec-fetch-site" -> "same-origin",
+  "sec-fetch-user" -> "?1",
+  "upgrade-insecure-requests" -> "1")
+
+ val document_headers_22 = Map(
+  "accept" -> "application/json, text/plain, */*",
+  "accept-encoding" -> "gzip, deflate, br",
+  "accept-language" -> "en-GB,en-US;q=0.9,en;q=0.8",
+  "sec-ch-ua" -> """Chromium";v="88", "Google Chrome";v="88", ";Not A Brand";v="99""",
+  "sec-ch-ua-mobile" -> "?0",
+  "sec-fetch-dest" -> "empty",
+  "sec-fetch-mode" -> "cors",
+  "sec-fetch-site" -> "same-origin")
+
+ val document_headers_31 = Map(
+  "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json",
+  "accept-encoding" -> "gzip, deflate, br",
+  "accept-language" -> "en-GB,en-US;q=0.9,en;q=0.8",
+  "content-type" -> "application/json",
+  "experimental" -> "true",
+  "sec-ch-ua" -> """Chromium";v="88", "Google Chrome";v="88", ";Not A Brand";v="99""",
+  "sec-ch-ua-mobile" -> "?0",
+  "sec-fetch-dest" -> "empty",
+  "sec-fetch-mode" -> "cors",
+  "sec-fetch-site" -> "same-origin")
+
+ val document_headers_75 = Map(
+  "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8",
+  "accept-encoding" -> "gzip, deflate, br",
+  "accept-language" -> "en-GB,en-US;q=0.9,en;q=0.8",
+  "content-type" -> "application/json",
+  "experimental" -> "true",
+  "origin" -> "${baseURL}",
+  "sec-ch-ua" -> """Chromium";v="88", "Google Chrome";v="88", ";Not A Brand";v="99""",
+  "sec-ch-ua-mobile" -> "?0",
+  "sec-fetch-dest" -> "empty",
+  "sec-fetch-mode" -> "cors",
+  "sec-fetch-site" -> "same-origin",
+  "x-xsrf-token" -> "${XSRFToken}")
+
+ val document_headers_98 = Map(
+  "accept" -> "application/json",
+  "accept-encoding" -> "gzip, deflate, br",
+  "accept-language" -> "en-GB,en-US;q=0.9,en;q=0.8",
+  "content-type" -> "application/json",
+  "origin" -> "${baseURL}",
+  "sec-ch-ua" -> """Chromium";v="88", "Google Chrome";v="88", ";Not A Brand";v="99""",
+  "sec-ch-ua-mobile" -> "?0",
+  "sec-fetch-dest" -> "empty",
+  "sec-fetch-mode" -> "cors",
+  "sec-fetch-site" -> "same-origin",
+  "x-xsrf-token" -> "${XSRFToken}")
+
+ val respondent_headers_3 = Map(
+  "accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+  "accept-encoding" -> "gzip, deflate, br",
+  "accept-language" -> "en-GB,en-US;q=0.9,en;q=0.8",
+  "sec-ch-ua" -> """Chromium";v="88", "Google Chrome";v="88", ";Not A Brand";v="99""",
+  "sec-ch-ua-mobile" -> "?0",
+  "sec-fetch-dest" -> "document",
+  "sec-fetch-mode" -> "navigate",
+  "sec-fetch-site" -> "same-origin",
+  "sec-fetch-user" -> "?1",
+  "upgrade-insecure-requests" -> "1")
+
+ val respondent_headers_22 = Map(
+  "accept" -> "application/json, text/plain, */*",
+  "accept-encoding" -> "gzip, deflate, br",
+  "accept-language" -> "en-GB,en-US;q=0.9,en;q=0.8",
+  "sec-ch-ua" -> """Chromium";v="88", "Google Chrome";v="88", ";Not A Brand";v="99""",
+  "sec-ch-ua-mobile" -> "?0",
+  "sec-fetch-dest" -> "empty",
+  "sec-fetch-mode" -> "cors",
+  "sec-fetch-site" -> "same-origin")
+
+ val respondent_headers_30 = Map(
+  "accept" -> "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-case-view.v2+json",
+  "accept-encoding" -> "gzip, deflate, br",
+  "accept-language" -> "en-GB,en-US;q=0.9,en;q=0.8",
+  "content-type" -> "application/json",
+  "experimental" -> "true",
+  "sec-ch-ua" -> """Chromium";v="88", "Google Chrome";v="88", ";Not A Brand";v="99""",
+  "sec-ch-ua-mobile" -> "?0",
+  "sec-fetch-dest" -> "empty",
+  "sec-fetch-mode" -> "cors",
+  "sec-fetch-site" -> "same-origin")
+
+ val respondent_headers_63 = Map(
+  "accept" -> "application/json, text/plain, */*",
+  "accept-encoding" -> "gzip, deflate, br",
+  "accept-language" -> "en-GB,en-US;q=0.9,en;q=0.8",
+  "sec-ch-ua" -> """Chromium";v="88", "Google Chrome";v="88", ";Not A Brand";v="99""",
+  "sec-ch-ua-mobile" -> "?0",
+  "sec-fetch-dest" -> "empty",
+  "sec-fetch-mode" -> "cors",
+  "sec-fetch-site" -> "same-origin",
+  "x-dtpc" -> "2$300933225_46h22vKOSBAFHKHTKVMVPFAAJRTFWULTGTPPSF-0e15",
+  "x-dtreferer" -> "${baseURL}/case/PUBLICLAW/CARE_SUPERVISION_EPO/${caseId}/trigger/enterRespondents")
+
+ val respondent_headers_159 = Map(
+  "accept" -> "application/json",
+  "accept-encoding" -> "gzip, deflate, br",
+  "accept-language" -> "en-GB,en-US;q=0.9,en;q=0.8",
+  "content-type" -> "application/json",
+  "origin" -> "${baseURL}",
+  "sec-ch-ua" -> """Chromium";v="88", "Google Chrome";v="88", ";Not A Brand";v="99""",
+  "sec-ch-ua-mobile" -> "?0",
+  "sec-fetch-dest" -> "empty",
+  "sec-fetch-mode" -> "cors",
+  "sec-fetch-site" -> "same-origin",
+  "x-xsrf-token" -> "${XSRFToken}")
+
 }
