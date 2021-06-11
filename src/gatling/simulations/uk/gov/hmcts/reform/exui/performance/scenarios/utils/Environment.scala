@@ -36,9 +36,9 @@ val baseDomainOrg="manage-org.aat.platform.hmcts.net"
   val minThinkTimeIACC = 100
   //10
   val maxThinkTimeIACC = 120
-  val minThinkTimeFPLV = 5
+  val minThinkTimeFPLV = 2
   //10
-  val maxThinkTimeFPLV = 15
+  val maxThinkTimeFPLV = 5
   //320
   val minThinkTimeIACV = 470
   //10

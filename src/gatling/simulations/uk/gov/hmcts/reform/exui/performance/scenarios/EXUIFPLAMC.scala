@@ -314,7 +314,7 @@ object EXUIFPLAMC {
         .post("/workallocation/searchForCompletable")
         .headers(FPLAHeader.respondent_headers_159)
         .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"enterRespondents","jurisdiction":"PUBLICLAW","caseTypeId":"CARE_SUPERVISION_EPO"}}"""))
-        .check(status.is(401)))
+        .check(status.in(200,401)))
 
       .exec(http("XUI${service}_200_015_RespondentsSaveViewCase")
         .get("/data/internal/cases/${caseId}")
@@ -546,7 +546,7 @@ object EXUIFPLAMC {
         .post("/workallocation/searchForCompletable")
         .headers(FPLAHeader.document_headers_98)
         .body(StringBody("""{"searchRequest":{"ccdId":"${caseId}","eventId":"uploadDocuments","jurisdiction":"PUBLICLAW","caseTypeId":"CARE_SUPERVISION_EPO"}}"""))
-        .check(status.is(401)))
+        .check(status.in(200,401)))
 
       .exec(http("XUI${service}_340_015_DocumentsSaveViewCase")
         .get("/data/internal/cases/${caseId}")
