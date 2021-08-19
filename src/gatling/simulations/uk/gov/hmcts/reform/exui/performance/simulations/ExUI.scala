@@ -12,30 +12,13 @@ class ExUI extends Simulation {
 	val orgurl=Environment.manageOrdURL
 
 	val feedUserDataFPLView = csv("FPLDataView.csv").circular
-	val feedUserDataFPLCreate = csv("FPLDataCreate.csv").circular
+	// val feedUserDataFPLCreate = csv("FPLDataCreate.csv").circular
+	val feedUserDataFPLCreate = csv("FPLUserData.csv").circular
 	val feedUserDataCaseworker = csv("Caseworkers.csv").circular
   val feedUserDataFPLCases = csv("FPLCases.csv").circular
 
-
-
-	/*val httpProtocol = Environment.HttpProtocol
-		.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
-	//.baseUrl("https://xui-webapp-aat.service.core-compute-aat.internal")
-		.baseUrl("https://ccd-case-management-web-perftest.service.core-compute-perftest.internal")*/
-
-  val XUIHttpProtocol = Environment.HttpProtocol
-    .proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
-    .baseUrl(orgurl)
-    //.baseUrl("https://ccd-case-management-web-perftest.service.core-compute-perftest.internal")
-    .headers(Environment.commonHeader)
-
-
   val IAChttpProtocol = Environment.HttpProtocol
-		//.proxy(Proxy("proxyout.reform.hmcts.net", 8080).httpsPort(8080))
 		.baseUrl(BaseURL)
-		//.baseUrl("https://xui-webapp-perftest.service.core-compute-perftest.internal")
-		//.baseUrl("https://ccd-case-management-web-perftest.service.core-compute-perftest.internal")
-
    // .inferHtmlResources()
     .userAgentHeader("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36")
 
@@ -60,17 +43,25 @@ class ExUI extends Simulation {
 			)
 	 }
 
-
-
 	val EXUIMCaseCreationFPLAScn = scenario("***** FPLA Create Case ***** ").repeat(1)
 	{
-		feed(feedUserDataFPLCreate).feed(Feeders.FPLCreateDataFeeder)
+		feed(feedUserDataFPLCreate)
+    .feed(Feeders.FPLCreateDataFeeder)
 	  	.exec(EXUIMCLogin.manageCasesHomePage)
 		.exec(EXUIMCLogin.manageCaseslogin)
 			//.exec(EXUIMCLogin.termsnconditions)
 		  	.repeat(1) {
-					 exec(EXUIFPLAMC.fplacasecreation1)
-					.exec(EXUIFPLAMC.fplacasecreation2)
+					 exec(EXUIFPLAMC.fplcasecreation)
+					.exec(EXUIFPLAMC.fplOrdersNeeded)
+          .exec(EXUIFPLAMC.fplHearingNeeded)
+          .exec(EXUIFPLAMC.fplChildDetails)
+          .exec(EXUIFPLAMC.fplEnterRespondents)
+          .exec(EXUIFPLAMC.fplEnterApplicant)
+          .exec(EXUIFPLAMC.fplEnterGrounds)
+          .exec(EXUIFPLAMC.fplAllocationProposal)
+          .exec(EXUIFPLAMC.fplUploadDocuments)
+          .exec(EXUIFPLAMC.fplLocalAuthority)
+          .exec(EXUIFPLAMC.fplSubmitApplication)
 				}
 		.exec(EXUIMCLogin.manageCase_Logout)
 	}
@@ -127,9 +118,10 @@ class ExUI extends Simulation {
 
 	setUp(
 
-		EXUIMCaseCaseworkerScn.inject(rampUsers(10) during (300)),
-		EXUIMCaseCreationFPLAScn.inject(rampUsers(10) during 300)
+		// EXUIMCaseCaseworkerScn.inject(rampUsers(1) during (300)),
+		EXUIMCaseCreationFPLAScn.inject(rampUsers(1) during 300).disablePauses
 	).protocols(IAChttpProtocol)
+  
 	 .assertions(global.successfulRequests.percent.gte(95))
 	 .assertions(forAll.successfulRequests.percent.gte(90))
 

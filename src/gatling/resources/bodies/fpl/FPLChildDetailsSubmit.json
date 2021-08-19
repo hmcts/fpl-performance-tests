@@ -1,0 +1,69 @@
+{
+  "data": {
+     "children1": [
+        {
+           "value": {
+              "representative": {},
+              "solicitor": {},
+              "finalOrderIssued": null,
+              "finalOrderIssuedType": null,
+              "finalDecisionReason": null,
+              "finalDecisionDate": null,
+              "party": {
+                 "firstName": "${childFirstName}",
+                 "lastName": "${childLastName}",
+                 "dateOfBirth": "${dobYearChild}-${dobMonth}-${dobDay}",
+                 "gender": "Boy",
+                 "genderIdentification": null,
+                 "livingSituation": "Living with respondents",
+                 "livingSituationDetails": null,
+                 "addressChangeDate": null,
+                 "datePowersEnd": null,
+                 "careStartDate": null,
+                 "dischargeDate": null,
+                 "keyDates": "none",
+                 "careAndContactPlan": null,
+                 "adoption": "No",
+                 "placementOrderApplication": null,
+                 "placementCourt": null,
+                 "mothersName": "mother",
+                 "fathersName": "father",
+                 "fathersResponsibility": "Yes",
+                 "socialWorkerName": null,
+                 "additionalNeeds": "No",
+                 "additionalNeedsDetails": null,
+                 "detailsHidden": "No",
+                 "detailsHiddenReason": null,
+                 "litigationIssues": "NO",
+                 "litigationIssuesDetails": null,
+                 "partyId": "${partyId}",
+                 "partyType": null,
+                 "showAddressInConfidentialTab": null,
+                 "address": {
+                    "AddressLine1": null,
+                    "AddressLine2": null,
+                    "AddressLine3": null,
+                    "PostTown": null,
+                    "County": null,
+                    "PostCode": null,
+                    "Country": null
+                 },
+                 "socialWorkerTelephoneNumber": {
+                    "telephoneNumber": "020123123123",
+                    "contactDirection": null
+                 }
+              },
+              "legalCounsellors": []
+           },
+           "id": "602556c9-7a63-460c-b11f-eab98e9372ea"
+        }
+     ]
+  },
+  "event": {
+     "id": "enterChildren",
+     "summary": "",
+     "description": ""
+  },
+  "event_token": "${event_token}",
+  "ignore_warning": false
+}
