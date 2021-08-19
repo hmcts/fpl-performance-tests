@@ -47,25 +47,24 @@ class ExUI extends Simulation {
 	{
 		feed(feedUserDataFPLCreate)
     .feed(Feeders.FPLCreateDataFeeder)
-	  	.exec(EXUIMCLogin.manageCasesHomePage)
-		.exec(EXUIMCLogin.manageCaseslogin)
-			//.exec(EXUIMCLogin.termsnconditions)
-		  	.repeat(1) {
-          exitBlockOnFail {
-            exec(EXUIFPLAMC.fplcasecreation)
-            .exec(EXUIFPLAMC.fplOrdersNeeded)
-            .exec(EXUIFPLAMC.fplHearingNeeded)
-            .exec(EXUIFPLAMC.fplChildDetails)
-            .exec(EXUIFPLAMC.fplEnterRespondents)
-            .exec(EXUIFPLAMC.fplEnterApplicant)
-            .exec(EXUIFPLAMC.fplEnterGrounds)
-            .exec(EXUIFPLAMC.fplAllocationProposal)
-            .exec(EXUIFPLAMC.fplUploadDocuments)
-            .exec(EXUIFPLAMC.fplLocalAuthority)
-            .exec(EXUIFPLAMC.fplSubmitApplication)
-          }
-				}
-		.exec(EXUIMCLogin.manageCase_Logout)
+    .exitBlockOnFail {
+      exec(EXUIMCLogin.manageCasesHomePage)
+      .exec(EXUIMCLogin.manageCaseslogin)
+      .repeat(1) {
+        exec(EXUIFPLAMC.fplcasecreation)
+        .exec(EXUIFPLAMC.fplOrdersNeeded)
+        .exec(EXUIFPLAMC.fplHearingNeeded)
+        .exec(EXUIFPLAMC.fplChildDetails)
+        .exec(EXUIFPLAMC.fplEnterRespondents)
+        .exec(EXUIFPLAMC.fplEnterApplicant)
+        .exec(EXUIFPLAMC.fplEnterGrounds)
+        .exec(EXUIFPLAMC.fplAllocationProposal)
+        .exec(EXUIFPLAMC.fplUploadDocuments)
+        .exec(EXUIFPLAMC.fplLocalAuthority)
+        .exec(EXUIFPLAMC.fplSubmitApplication)
+      }
+      .exec(EXUIMCLogin.manageCase_Logout)
+    }
 	}
 
 	/*val EXUIMCaseViewFPLAScn = scenario("***** FPLA View Case ***** ").repeat(1)
@@ -121,7 +120,7 @@ class ExUI extends Simulation {
 	setUp(
 
 		// EXUIMCaseCaseworkerScn.inject(rampUsers(1) during (300)),
-		EXUIMCaseCreationFPLAScn.inject(rampUsers(10) during 180)
+		EXUIMCaseCreationFPLAScn.inject(rampUsers(1) during 180)
 	).protocols(IAChttpProtocol)
   
 	 .assertions(global.successfulRequests.percent.gte(95))

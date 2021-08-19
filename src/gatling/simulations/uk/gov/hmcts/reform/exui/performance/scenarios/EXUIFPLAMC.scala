@@ -317,7 +317,6 @@ val fplChildDetails =
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
       .header("x-xsrf-token", "${XSRFToken}")
       .check(jsonPath("$.event_token").saveAs("event_token"))
-      .check(jsonPath("$.case_fields[*].value[*].id").saveAs("id"))
       .check(Common.savePartyId)
       .check(Common.saveId)
       .check(substring("Entering the children for the case")))
