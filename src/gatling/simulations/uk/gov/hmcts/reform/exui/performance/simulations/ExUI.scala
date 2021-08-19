@@ -51,17 +51,19 @@ class ExUI extends Simulation {
 		.exec(EXUIMCLogin.manageCaseslogin)
 			//.exec(EXUIMCLogin.termsnconditions)
 		  	.repeat(1) {
-					 exec(EXUIFPLAMC.fplcasecreation)
-					.exec(EXUIFPLAMC.fplOrdersNeeded)
-          .exec(EXUIFPLAMC.fplHearingNeeded)
-          .exec(EXUIFPLAMC.fplChildDetails)
-          .exec(EXUIFPLAMC.fplEnterRespondents)
-          .exec(EXUIFPLAMC.fplEnterApplicant)
-          .exec(EXUIFPLAMC.fplEnterGrounds)
-          .exec(EXUIFPLAMC.fplAllocationProposal)
-          .exec(EXUIFPLAMC.fplUploadDocuments)
-          .exec(EXUIFPLAMC.fplLocalAuthority)
-          .exec(EXUIFPLAMC.fplSubmitApplication)
+          exitBlockOnFail {
+            exec(EXUIFPLAMC.fplcasecreation)
+            .exec(EXUIFPLAMC.fplOrdersNeeded)
+            .exec(EXUIFPLAMC.fplHearingNeeded)
+            .exec(EXUIFPLAMC.fplChildDetails)
+            .exec(EXUIFPLAMC.fplEnterRespondents)
+            .exec(EXUIFPLAMC.fplEnterApplicant)
+            .exec(EXUIFPLAMC.fplEnterGrounds)
+            .exec(EXUIFPLAMC.fplAllocationProposal)
+            .exec(EXUIFPLAMC.fplUploadDocuments)
+            .exec(EXUIFPLAMC.fplLocalAuthority)
+            .exec(EXUIFPLAMC.fplSubmitApplication)
+          }
 				}
 		.exec(EXUIMCLogin.manageCase_Logout)
 	}
@@ -119,7 +121,7 @@ class ExUI extends Simulation {
 	setUp(
 
 		// EXUIMCaseCaseworkerScn.inject(rampUsers(1) during (300)),
-		EXUIMCaseCreationFPLAScn.inject(rampUsers(1) during 300).disablePauses
+		EXUIMCaseCreationFPLAScn.inject(rampUsers(1) during 300)
 	).protocols(IAChttpProtocol)
   
 	 .assertions(global.successfulRequests.percent.gte(95))

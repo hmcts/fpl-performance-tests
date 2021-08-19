@@ -317,6 +317,7 @@ val fplChildDetails =
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
       .header("x-xsrf-token", "${XSRFToken}")
       .check(jsonPath("$.event_token").saveAs("event_token"))
+      .check(jsonPath("$.case_fields[*].value[*].id").saveAs("id"))
       .check(Common.savePartyId)
       .check(Common.saveId)
       .check(substring("Entering the children for the case")))
@@ -881,15 +882,23 @@ val fplLocalAuthority =
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.ui-start-event-trigger.v2+json;charset=UTF-8")
       .header("x-xsrf-token", "${XSRFToken}")
       .check(jsonPath("$.event_token").saveAs("event_token"))
-      .check(jsonPath("$.case_fields[*].value.name").saveAs("laName"))
-      .check(jsonPath("$.case_fields[*].value.id").saveAs("laId"))
-      .check(jsonPath("$.case_fields[*].value.address.AddressLine1").saveAs("laAddressLine1"))
-      .check(jsonPath("$.case_fields[*].value.address.AddressLine2").saveAs("laAddressLine2"))
-      .check(jsonPath("$.case_fields[*].value.address.AddressLine3").saveAs("laAddressLine3"))
-      .check(jsonPath("$.case_fields[*].value.address.PostTown").saveAs("laPostTown"))
-      .check(jsonPath("$.case_fields[*].value.address.County").saveAs("laCounty"))
-      .check(jsonPath("$.case_fields[*].value.address.PostCode").saveAs("laPostcode"))
-      .check(substring("Local authority's details")))
+      .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.name").saveAs("laName"))
+      .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.id").ofType[Any].saveAs("laId"))
+      .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.AddressLine1").saveAs("laAddressLine1"))
+      .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.AddressLine2").saveAs("laAddressLine2"))
+      .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.AddressLine3").saveAs("laAddressLine3"))
+      .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.PostTown").saveAs("laPostTown"))
+      .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.County").saveAs("laCounty"))
+      .check(jsonPath("$.case_fields[?(@.id=='localAuthority')].value.address.PostCode").saveAs("laPostcode"))
+      .check(substring("Local authority's details"))
+      // .check(bodyString.saveAs("BODY"))
+      )
+
+    // .exec(session => {
+    //   val response = session("BODY").as[String]
+    //   println(s"Response body: \n$response")
+    //   session
+    // })
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterLocalAuthority"))
 
@@ -935,8 +944,8 @@ val fplLocalAuthority =
       .header("accept", "application/vnd.uk.gov.hmcts.ccd-data-store-api.case-data-validate.v2+json;charset=UTF-8")
       .header("x-xsrf-token", "${XSRFToken}")
       .body(ElFileBody("bodies/fpl/FPLLocalAuthorityColleagueAdd.json"))
-      .check(jsonPath("$.data.localAuthorityColleagues[*].id").saveAs("laColleagueId"))
-      .check(substring("colleagues")))
+      .check(jsonPath("$.data.localAuthorityColleagues[0].id").saveAs("laColleagueId"))
+      .check(substring("localAuthority")))
 
     .exec(Common.healthcheck("%2Fcases%2Fcase-details%2F${caseId}%2Ftrigger%2FenterLocalAuthority%2Fsubmit"))
 
