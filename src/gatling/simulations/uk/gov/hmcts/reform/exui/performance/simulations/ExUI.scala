@@ -33,8 +33,7 @@ class ExUI extends Simulation {
 		}
 
 	setUp(
-			EXUIMCaseCreationFPLAScn.inject(atOnceUsers(1)).disablePauses
-			//EXUIMCaseCreationFPLAScn.inject(rampUsers(10) during (180))
+			EXUIMCaseCreationFPLAScn.inject(rampUsers(10) during (180))
 		).protocols(FPLhttpProtocol)
 		.assertions(global.successfulRequests.percent.gte(95),
 			forAll.successfulRequests.percent.gte(80))
