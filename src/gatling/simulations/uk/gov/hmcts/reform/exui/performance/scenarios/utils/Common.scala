@@ -1,10 +1,11 @@
 package uk.gov.hmcts.reform.exui.performance.scenarios.utils
 
+import com.fasterxml.jackson.databind.JsonNode
 import io.gatling.core.Predef._
-import io.gatling.http.Predef._
 import io.gatling.core.check.CheckBuilder
 import io.gatling.core.check.jsonpath.JsonPathCheckType
-import com.fasterxml.jackson.databind.JsonNode
+import io.gatling.http.Predef._
+
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import scala.util.Random
@@ -39,7 +40,7 @@ object Common {
   }
   //Date of Birth <= 18 years
   def getDobYearChild(): String = {
-    now.minusYears(1 + rnd.nextInt(17)).format(patternYear)
+    now.minusYears(2 + rnd.nextInt(15)).format(patternYear)
   }
   //Date of Death <= 21 years
   def getDodYear(): String = {
